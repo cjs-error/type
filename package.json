@@ -1,6 +1,6 @@
 {
   "name": "@cjs-error/type",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Comprehensive and powerful node.js Error API for creating custom errors and stack traces",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cjs-error/type",
   "dependencies": {
-    "@cjs-error/extend": "^1.0.0"
+    "@cjs-error/extend": "^1.0.1",
+    "@cjs-error/utils": "0.0.1"
   }
 }

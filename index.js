@@ -1,5 +1,5 @@
 var Error  = require('@cjs-error/extend');
-// var assign = require('@cjs-error/utils').assign;
+var assign = require('@cjs-error/utils').assign;
 
 module.exports = Error;
 
@@ -14,21 +14,25 @@ function type(name, prototype) {
     if (type[name]) {
       constructor = type[name];
       // If cached then add all enumerable properties by descriptor to `constructor.prototype`
-      return assign(constructor.prototype, prototype);
+      assign(constructor.prototype, prototype);
+      return constructor;
     }
 
     // Create a new constructor and return it, same as calling `Super.extend` directly without caching
     constructor = Super.extend(prototype);
-    return type[name] = constructor;
+    return type[constructor.name] = constructor;
   }
   else if (argType === 'function') {
     // Extend and cache the constructor, Notice: that it doesn't matter if type[name] is already cached
     constructor = Super.extend.apply(Super, arguments);
-    return type[name.name] = constructor;
+    return type[constructor.name] = constructor;
   }
 
   // Notice: `typeof` name is known only to not be an "object" and "function", if cached return that type
   if (type[name]) {
+    if (typeof(prototype) === 'object') {
+      assign(type[name].prototype, prototype);
+    }
     return type[name];
   }
 

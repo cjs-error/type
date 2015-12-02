@@ -1,7 +1,7 @@
 # Error.type()
 Comprehensive and powerful node.js Error API for creating custom errors and stack traces
 * Compliments [***@cjs-error/extend***](https://github.com/cjs-error/extend)
-* Exposes an additional method on extended error constructors: `type`
+* Exposes two additional methods on extended error constructors: `type` and `exists`
 * Error type import/export system
 * Introduces new error types: `SystemError` and `ErrorEmitter`
 
@@ -21,7 +21,11 @@ Comprehensive and powerful node.js Error API for creating custom errors and stac
 * `Error.exists(name)`
 
 ## Usage
-Since `Error.type` has the same function signature and can work as an alias to `Error.extend` this documentation will pick up where [@cjs-error/extend](https://github.com/cjs-error/extend#details) leaves off. The usage is mostly the same but with some differences covered in [#Import/Export](#importexport)
+Since `Error.type` has the same function signature and can work as an alias to `Error.extend` this documentation will pick up where [@cjs-error/extend](https://github.com/cjs-error/extend#details) leaves off. The usage is mostly the same but with some differences.
+
+* Calling `Error.type` will create the type if it doesn't already exist, same as calling `Error.extend` then cache the result. 
+* Already existent types will be updated by ***copying(by descriptor)*** all the enumerable properties of the provided prototype to the cached constructor's prototype.
+* Calling `Error.type` with a constructor will replace if any cached constructor with the matching `Function.name`.
 
 ```js
 var Error = require('@cjs-error/type')
@@ -43,8 +47,8 @@ var SystemError = Error.type('SystemError', {
 var OpenError = SystemError.type({ name: 'OpenError', syscall: 'open' });
 
 throw CustomError('message' /* optional context */)
-throw OpenError('ENOENT: no such file or directory, open ./non-existant/').
-  with('ENOENT', -2, './non-existant/')
+throw OpenError('ENOENT: no such file or directory, open ./non-existent/').
+  with('ENOENT', -2, './non-existent/')
 ```
 
 ## Import/Export
@@ -65,7 +69,7 @@ If both the `MyError` variables from "Module A" and "Module B" were compared for
 You might follow one or more of the following suggestions:
 * Prefer using `@cjs-error/extend` in modules and export your _extended error constructors_ using `module.exports`
 * Ensure that your type is generic enough to avoid compatibility issues and document that well
-* Check for existant using `Error.exists` and elect to not redefine or extend the already existant type
+* Check for existent using `Error.exists` and elect to not redefine or extend the already existent type
 
 ## Details
 _***Details are better written in code***_ :point_down:
